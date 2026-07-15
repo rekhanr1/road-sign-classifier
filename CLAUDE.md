@@ -24,6 +24,7 @@ photos.
 - `src/model.py` — ResNet-18 builder with freeze/unfreeze of the pretrained backbone
 - `src/utils.py` — seeding, checkpoint save/load, accuracy helper
 - `src/train.py` — training loop: frozen-backbone warmup → fine-tune, early stopping on val accuracy, saves best checkpoint to `checkpoints/best_model.pth`, logs `training_history.csv`, `classification_report.txt`, `per_class_f1.csv`, `confusion_matrix.png` to `outputs/`
+- `src/evaluate.py` — standalone evaluation of a trained checkpoint (default `src/best_model.pth`) on the held-out GTSRB **test** split; logs `classification_report.txt`, `per_class_f1.csv`, `confusion_matrix.png`, `metrics_summary.txt` to `outputs/`
 - `notebooks/train_on_colab.ipynb` — clones the repo, installs `requirements.txt`, downloads GTSRB, runs `src.train` on a Colab GPU, downloads the resulting weights
 - `requirements.txt`, `.gitignore`
 
@@ -35,15 +36,16 @@ photos.
 5. Colab runnability (GPU detection, auto-download, `train_on_colab.ipynb`) — **done**
 6. Version control (git init, GitHub repo, push) — **done**
 7. Inference script (`src/infer.py` for single-image/folder prediction) — **not started** (a draft was written once but the user rejected that tool call; the file doesn't exist in the repo)
-8. An actual training run — **not started**: no data has been downloaded locally yet, `checkpoints/` and `data/` are empty, and no real accuracy/F1 numbers exist
-9. Test-set evaluation script (currently `get_dataloaders` returns a `test_loader` that nothing consumes) — **not started**
+8. An actual training run — **done**: trained on Colab, weights downloaded to `src/best_model.pth`. `checkpoints/` and `data/` remain empty locally (nothing has been trained or run locally yet — torch isn't installed in any local env, base conda or `cwq`)
+9. Test-set evaluation script (`src/evaluate.py`) — **done**: loads `src/best_model.pth`, evaluates on the held-out GTSRB test split, logs metrics to `outputs/`. Not yet run locally/verified end-to-end (no local torch install)
 10. Optional/future: model export (ONNX/TorchScript), a simple demo UI — **not requested yet**
 
 ## Done vs. remaining
 **Done:** repo scaffold, data pipeline with dashcam-realistic augmentation,
 training script with early stopping and full metrics logging, Colab training
-notebook, git/GitHub setup with the first two commits pushed.
+notebook, git/GitHub setup, an actual Colab training run (`src/best_model.pth`),
+and a standalone test-set evaluation script.
 
-**Remaining:** write `src/infer.py`; run actual training (locally or via the
-Colab notebook) to produce `checkpoints/best_model.pth` and real metrics;
-add a script to evaluate on the held-out GTSRB test split.
+**Remaining:** write `src/infer.py`; actually run `src/evaluate.py` (needs
+torch installed locally, or run on Colab) to get real numbers instead of just
+reviewed-but-unexecuted code; `outputs/` is still empty.
